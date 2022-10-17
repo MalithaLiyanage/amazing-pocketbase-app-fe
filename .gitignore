@@ -39,3 +39,4 @@ storybook-static
 
 # package-lock
 package-lock.json
+yarn*

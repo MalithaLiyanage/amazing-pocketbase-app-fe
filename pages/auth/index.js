@@ -13,6 +13,7 @@ import {
   Stack,
 } from '@mantine/core';
 import { GoogleButton, TwitterButton } from '../../components/SocialButtons';
+import { createUser } from '../../api/UserService';
 
 function AuthenticationForm(props) {
   const [type, toggle] = useToggle(['login', 'register']);
@@ -21,14 +22,21 @@ function AuthenticationForm(props) {
       email: '',
       name: '',
       password: '',
+      passwordConfirm: '',
       terms: true,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      password: (val) => (val.length < 8 ? 'Password should include at least 8 characters' : null),
+      passwordConfirm: (val) => (form.values.password !== val ? 'Passwords should be identical' : null),
     },
   });
+
+  const onClickSubmit = () => {
+    console.log('sdfsdfwer', form);
+    createUser(form.values)
+  }
 
   return (
     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
@@ -44,7 +52,7 @@ function AuthenticationForm(props) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => onClickSubmit())}>
         <Stack>
           {type === 'register' && (
             <TextInput
@@ -70,15 +78,26 @@ function AuthenticationForm(props) {
             placeholder="Your password"
             value={form.values.password}
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-            error={form.errors.password && 'Password should include at least 6 characters'}
+            error={form.errors.password && 'Password should include at least 8 characters'}
           />
 
           {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
+            <>
+              <PasswordInput
+                required
+                label="Re Enter Password"
+                placeholder="Your password"
+                value={form.values.passwordConfirm}
+                onChange={(event) => form.setFieldValue('passwordConfirm', event.currentTarget.value)}
+                error={form.errors.passwordConfirm && 'Passwords should be identical'}
+              />
+              
+              <Checkbox
+                label="I accept terms and conditions"
+                checked={form.values.terms}
+                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+              />
+            </>
           )}
         </Stack>
 
