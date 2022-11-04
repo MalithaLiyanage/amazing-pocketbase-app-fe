@@ -21,12 +21,12 @@ const ProductCard = (props) => {
     const {productData} = props;
     
     return (
-        <Card key={productData.title} p="md" radius="md" component="a" href="#" className={classes.card}>
+        <Card key={productData.id} p="md" radius="md" component="a" href="#" className={classes.card}>
             <AspectRatio ratio={1920 / 1080}>
                 <Image src={productData.image} />
             </AspectRatio>
             <Text color="dimmed" size="xs" transform="uppercase" weight={700} mt="md">
-                {productData.date}
+                {productData.price}
             </Text>
             <Text className={classes.title} mt={5}>
                 {productData.title}
